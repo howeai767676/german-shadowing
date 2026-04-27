@@ -25,7 +25,7 @@ h2{font-size:14px;margin-bottom:8px;color:#1565c0}
 .url-note{font-size:11px;color:#888;margin-top:6px}
 .loading{font-size:11px;color:#6a1b9a;margin-top:6px;display:none}
 .loading.on{display:block}
-.card{border:1px solid #e0e0e0;border-radius:6px;padding:10px;margin-bottom:8px;background:#fff;transition:background .2s}
+.card{border:1px solid #e0e0e0;border-radius:6px;padding:10px;margin-bottom:8px;background:#fff}
 .card.done{background:#e8f5e9;border-color:#a5d6a7}
 .card.done .de{text-decoration:line-through;color:#999}
 .ts{font-size:11px;color:#1565c0;cursor:pointer;text-decoration:underline;margin-bottom:4px;display:inline-block}
@@ -55,13 +55,13 @@ h2{font-size:14px;margin-bottom:8px;color:#1565c0}
     </div>
     <div id="fetchStatus" class="loading"></div>
     <div class="url-note">支援格式：<code>youtu.be/XXX</code> 或 <code>youtube.com/watch?v=XXX</code></div>
-    <div class="url-note" style="margin-top:8px">小提示：若影片無德文字幕，可嘗試貼入「德文 ||| 中文」格式的手動文本，按「生成跟讀列表」。</div>
+    <div class="url-note" style="margin-top:8px">小提示：若影片無德文字幕，可手動貼入「德文 ||| 中文」格式。</div>
     <h2 style="margin-top:16px;">影片</h2>
     <iframe id="yt" width="100%" height="220" src="https://www.youtube.com/embed/5xMl8W-aiCg" frameborder="0" allowfullscreen></iframe>
     <p style="font-size:11px;color:#888;margin-top:8px;">點右側「跳到此句」即可跳到影片對應時間點。</p>
   </div>
   <div class="right">
-    <h2>步驟 2：貼入逐句文本（手動或自動後可編輯）</h2>
+    <h2>步驟 2：貼入逐句文本</h2>
     <div class="url-box" style="flex-direction:column">
       <textarea id="textArea" rows="4" style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:12px" placeholder="格式：每一行一句&#10;德文句子 ||| 中文翻譯&#10;例如：Heute ist es warm. ||| 今天天氣溫暖。"></textarea>
       <button class="btn-primary" onclick="parseText()">生成跟讀列表</button>
@@ -102,46 +102,32 @@ function setStatus(msg,loading){
 function autoFetch(){
   var input=document.getElementById('ytInput').value.trim();
   var id=getVideoId(input);
-  if(!id){ alert('請先貼入 YouTube 連結並按載入影片。'); return; }
+  if(!id){ alert('請先貼入 YouTube 連結。'); return; }
   VID=id;
-  setStatus('正在抓取德文逐字稿，可能需要 10-30 秒...',true);
+  setStatus('正在抓取德文逐字稿...',true);
   fetch('https://youtubetranscript.com/api/transcript?video_id='+id+'&lang=de')
-    .then(function(r){
-      if(!r.ok) throw new Error('抓取失敗，請確認影片有德文字幕。');
-      return r.json();
-    })
+    .then(function(r){ if(!r.ok) throw new Error('抓取失敗'); return r.json(); })
     .then(function(data){
-      var lines=data.map(function(item){
-        var de=item.text.replace(/\n/g,' ').replace(/\s+/g,' ').trim();
-        var t=Math.floor(item.offset/1000);
-        return t+'s|'+de;
-      }).join('\n');
       setStatus('德文已抓取！正在翻譯成中文...',true);
-      return fetch('https://libretranslate.com/translate',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({q:lines,source:'de',target:'zh',format:'text'})
-      }).then(function(r2){ return r2.json(); });
-    })
-    .then(function(trans){
-      var zhLines=(trans.translatedText||trans.result||'').split('\n');
-      var deLines=document.getElementById('textArea').value.split('\n').filter(function(l){return l.trim()});
-      if(deLines.length===0){
-        var deOnly=data.map(function(item){ return item.text.trim(); });
-        deLines=deOnly;
-      }
-      var result=[];
-      for(var i=0;i<deLines.length;i++){
-        var zh=(zhLines[i]||'（無翻譯）').trim();
-        result.push(deLines[i]+' ||| '+zh);
-      }
-      document.getElementById('textArea').value=result.join('\n');
-      setStatus('抓取完成！已填入右側，點「生成跟讀列表」開始練習。',false);
+      var deLines=data.map(function(item){ return item.text.trim(); });
+      var allText=deLines.join(' ');
+      return fetch('https://libretranslate.com/translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q:allText,source:'de',target:'zh',format:'text'})})
+        .then(function(r2){ return r2.json(); })
+        .then(function(trans){
+          var zhText=(trans.translatedText||trans.result||'').replace(/\n/g,' ');
+          var zhWords=zhText.split(/[,，.。！!？?]/).filter(function(z){return z.trim().length>0});
+          var result=[];
+          for(var i=0;i<deLines.length;i++){
+            var zh=(zhWords[i]||zhWords[Math.floor(i/2)]||'（無翻譯）').trim();
+            result.push(deLines[i]+' ||| '+zh);
+          }
+          document.getElementById('textArea').value=result.join('\n');
+          setStatus('完成！請點「生成跟讀列表」。',false);
+        });
     })
     .catch(function(e){
-      console.error(e);
-      setStatus('抓取失敗：'+e.message+'. 請確認影片有德文字幕（CC）。',false);
-      alert('自動抓取失敗：'+e.message+'\n\n可能原因：\n1. 影片沒有德文字幕\n2. 影片字幕為自動生成（非德文原聲）\n\n建議手動貼入「德文 ||| 中文」格式。');
+      setStatus('抓取失敗：'+e.message, false);
+      alert('自動抓取失敗：'+e.message+'\n可能原因：影片沒有德文字幕。\n建議手動貼入「德文 ||| 中文」格式。');
     });
 }
 
@@ -149,29 +135,15 @@ function parseText(){
   var raw=document.getElementById('textArea').value.split('\n').map(function(l){return l.trim()}).filter(function(l){return l.length>0});
   sentences=raw.map(function(line,i){
     var parts=line.split('|||');
-    return {
-      ts: Math.floor(i*5),
-      de: parts[0].trim(),
-      zh: parts[1] ? parts[1].trim() : ''
-    };
+    return {ts:Math.floor(i*5),de:parts[0].trim(),zh:parts[1]?parts[1].trim():''};
   });
   done=new Array(sentences.length).fill(false);
   render();
 }
 
-function fmt(s){
-  var m=Math.floor(s/60), sec=s%60;
-  return m+':'+(sec<10?'0':'')+sec;
-}
-
-function jump(ts){
-  document.getElementById('yt').src='https://www.youtube.com/embed/'+VID+'?autoplay=1&start='+ts;
-}
-
-function toggle(i){
-  done[i]=!done[i];
-  render();
-}
+function fmt(s){ var m=Math.floor(s/60),sec=s%60; return m+':'+(sec<10?'0':'')+sec; }
+function jump(ts){ document.getElementById('yt').src='https://www.youtube.com/embed/'+VID+'?autoplay=1&start='+ts; }
+function toggle(i){ done[i]=!done[i]; render(); }
 
 function render(){
   var list=document.getElementById('list');
