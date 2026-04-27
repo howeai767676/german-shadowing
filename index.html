@@ -17,9 +17,14 @@ header p{font-size:12px;margin-top:4px;opacity:.85}
 @media(max-width:800px){.left,.right{width:100%}}
 h2{font-size:14px;margin-bottom:8px;color:#1565c0}
 .url-box{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.url-box input{flex:1;min-width:160px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:13px}
-.url-box button{padding:8px 14px;border:none;border-radius:6px;cursor:pointer;background:#1565c0;color:#fff;font-size:12px}
+.url-box input,.url-box textarea{flex:1;min-width:160px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:13px}
+.url-box .btn-group{display:flex;gap:6px;flex-wrap:wrap}
+.url-box button{padding:8px 14px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
+.btn-primary{background:#1565c0;color:#fff}
+.btn-auto{background:#6a1b9a;color:#fff}
 .url-note{font-size:11px;color:#888;margin-top:6px}
+.loading{font-size:11px;color:#6a1b9a;margin-top:6px;display:none}
+.loading.on{display:block}
 .card{border:1px solid #e0e0e0;border-radius:6px;padding:10px;margin-bottom:8px;background:#fff;transition:background .2s}
 .card.done{background:#e8f5e9;border-color:#a5d6a7}
 .card.done .de{text-decoration:line-through;color:#999}
@@ -27,7 +32,7 @@ h2{font-size:14px;margin-bottom:8px;color:#1565c0}
 .de{font-size:14px;margin:4px 0;line-height:1.5}
 .zh{font-size:12px;color:#555;margin:4px 0;padding-left:12px;border-left:2px solid #ccc;font-style:italic}
 .btns{margin-top:6px}
-button.btns-btn{font-size:11px;padding:4px 10px;border:none;border-radius:4px;cursor:pointer}
+.btns button{font-size:11px;padding:4px 10px;border:none;border-radius:4px;cursor:pointer}
 .b-done{background:#43a047;color:#fff}
 .b-undo{background:#ef6c00;color:#fff}
 .progress{font-size:12px;color:#555;margin-bottom:8px;padding:8px;background:#e3f2fd;border-radius:6px}
@@ -36,25 +41,30 @@ button.btns-btn{font-size:11px;padding:4px 10px;border:none;border-radius:4px;cu
 <body>
 <header>
   <h1>德文跟讀練習 - Shadowing Trainer</h1>
-  <p>貼入任何 YouTube 德文影片連結，自動整理逐句跟讀，右側附中文翻譯。</p>
+  <p>貼入任何 YouTube 德文影片連結，自動抓取字幕＋翻譯成中文，逐句跟讀練習。</p>
 </header>
 <div class="wrap">
   <div class="left">
     <h2>步驟 1：貼入 YouTube 連結</h2>
     <div class="url-box">
-      <input type="text" id="ytInput" placeholder="例如：https://youtu.be/5xMl8W-aiCg 或 https://www.youtube.com/watch?v=...">
-      <button onclick="loadVideo()">載入影片</button>
+      <input type="text" id="ytInput" placeholder="https://youtu.be/... 或 https://youtube.com/watch?v=...">
+      <div class="btn-group">
+        <button class="btn-primary" onclick="loadVideo()">載入影片</button>
+        <button class="btn-auto" onclick="autoFetch()">自動抓取字幕</button>
+      </div>
     </div>
+    <div id="fetchStatus" class="loading"></div>
     <div class="url-note">支援格式：<code>youtu.be/XXX</code> 或 <code>youtube.com/watch?v=XXX</code></div>
+    <div class="url-note" style="margin-top:8px">小提示：若影片無德文字幕，可嘗試貼入「德文 ||| 中文」格式的手動文本，按「生成跟讀列表」。</div>
     <h2 style="margin-top:16px;">影片</h2>
     <iframe id="yt" width="100%" height="220" src="https://www.youtube.com/embed/5xMl8W-aiCg" frameborder="0" allowfullscreen></iframe>
     <p style="font-size:11px;color:#888;margin-top:8px;">點右側「跳到此句」即可跳到影片對應時間點。</p>
   </div>
   <div class="right">
-    <h2>步驟 2：貼入逐句文本</h2>
+    <h2>步驟 2：貼入逐句文本（手動或自動後可編輯）</h2>
     <div class="url-box" style="flex-direction:column">
       <textarea id="textArea" rows="4" style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:12px" placeholder="格式：每一行一句&#10;德文句子 ||| 中文翻譯&#10;例如：Heute ist es warm. ||| 今天天氣溫暖。"></textarea>
-      <button onclick="parseText()">生成跟讀列表</button>
+      <button class="btn-primary" onclick="parseText()">生成跟讀列表</button>
     </div>
     <h2 style="margin-top:16px;">逐句跟讀</h2>
     <div class="progress" id="prog">完成：0 / 0</div>
@@ -62,9 +72,9 @@ button.btns-btn{font-size:11px;padding:4px 10px;border:none;border-radius:4px;cu
   </div>
 </div>
 <script>
-let VID='5xMl8W-aiCg';
-let sentences=[];
-let done=[];
+var VID='5xMl8W-aiCg';
+var sentences=[];
+var done=[];
 
 function getVideoId(url){
   try{
@@ -81,7 +91,58 @@ function loadVideo(){
   if(!id){ alert('無法識別這個 YouTube 連結，請檢查格式。'); return; }
   VID=id;
   document.getElementById('yt').src='https://www.youtube.com/embed/'+id;
-  document.getElementById('textArea').placeholder='影片：'+id+' 已載入\n請貼上逐句文本（德文 ||| 中文）';
+}
+
+function setStatus(msg,loading){
+  var el=document.getElementById('fetchStatus');
+  el.textContent=msg;
+  el.className='loading'+(loading?' on':'');
+}
+
+function autoFetch(){
+  var input=document.getElementById('ytInput').value.trim();
+  var id=getVideoId(input);
+  if(!id){ alert('請先貼入 YouTube 連結並按載入影片。'); return; }
+  VID=id;
+  setStatus('正在抓取德文逐字稿，可能需要 10-30 秒...',true);
+  fetch('https://youtubetranscript.com/api/transcript?video_id='+id+'&lang=de')
+    .then(function(r){
+      if(!r.ok) throw new Error('抓取失敗，請確認影片有德文字幕。');
+      return r.json();
+    })
+    .then(function(data){
+      var lines=data.map(function(item){
+        var de=item.text.replace(/\n/g,' ').replace(/\s+/g,' ').trim();
+        var t=Math.floor(item.offset/1000);
+        return t+'s|'+de;
+      }).join('\n');
+      setStatus('德文已抓取！正在翻譯成中文...',true);
+      return fetch('https://libretranslate.com/translate',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({q:lines,source:'de',target:'zh',format:'text'})
+      }).then(function(r2){ return r2.json(); });
+    })
+    .then(function(trans){
+      var zhLines=(trans.translatedText||trans.result||'').split('\n');
+      var deLines=document.getElementById('textArea').value.split('\n').filter(function(l){return l.trim()});
+      if(deLines.length===0){
+        var deOnly=data.map(function(item){ return item.text.trim(); });
+        deLines=deOnly;
+      }
+      var result=[];
+      for(var i=0;i<deLines.length;i++){
+        var zh=(zhLines[i]||'（無翻譯）').trim();
+        result.push(deLines[i]+' ||| '+zh);
+      }
+      document.getElementById('textArea').value=result.join('\n');
+      setStatus('抓取完成！已填入右側，點「生成跟讀列表」開始練習。',false);
+    })
+    .catch(function(e){
+      console.error(e);
+      setStatus('抓取失敗：'+e.message+'. 請確認影片有德文字幕（CC）。',false);
+      alert('自動抓取失敗：'+e.message+'\n\n可能原因：\n1. 影片沒有德文字幕\n2. 影片字幕為自動生成（非德文原聲）\n\n建議手動貼入「德文 ||| 中文」格式。');
+    });
 }
 
 function parseText(){
@@ -120,31 +181,26 @@ function render(){
   sentences.forEach(function(s,i){
     var card=document.createElement('div');
     card.className='card'+(done[i]?' done':'');
-
     var tsSpan=document.createElement('span');
     tsSpan.className='ts';
     tsSpan.textContent=fmt(s.ts)+' ▶ 跳到此句';
     tsSpan.onclick=function(){jump(s.ts);};
-
     var deSpan=document.createElement('div');
     deSpan.className='de';
     deSpan.textContent=s.de;
-
     if(s.zh){
       var zhSpan=document.createElement('div');
       zhSpan.className='zh';
       zhSpan.textContent=s.zh;
       card.appendChild(zhSpan);
     }
-
     var btns=document.createElement('div');
     btns.className='btns';
     var btn=document.createElement('button');
-    btn.className='btns-btn '+(done[i]?'b-undo':'b-done');
+    btn.className=done[i]?'b-undo':'b-done';
     btn.textContent=done[i]?'取消':'已跟讀 ✓';
     btn.onclick=function(){toggle(i);};
     btns.appendChild(btn);
-
     card.appendChild(tsSpan);
     card.appendChild(deSpan);
     card.appendChild(btns);
