@@ -5,51 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>德文跟讀練習 - Shadowing Trainer</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,sans-serif;background:#f0f4f8;color:#222}
-header{background:#1565c0;color:#fff;padding:14px 18px;position:sticky;top:0;z-index:100}
-header h1{font-size:18px}
-header p{font-size:12px;margin-top:4px;opacity:.85}
-.wrap{display:flex;flex-direction:row;height:calc(100vh - 60px)}
-@media(max-width:800px){.wrap{flex-direction:column;height:auto}}
-.left{width:40%;border-right:1px solid #ccc;overflow-y:auto;padding:12px;background:#fff}
-.right{width:60%;overflow-y:auto;padding:12px;background:#fafafa}
-@media(max-width:800px){.left,.right{width:100%}}
-h2{font-size:14px;margin-bottom:8px;color:#1565c0}
-.url-box{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.url-box input{flex:1;min-width:200px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:13px}
-.url-box button{padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:12px;background:#1565c0;color:#fff}
-.url-note{font-size:11px;color:#888;margin-top:6px}
-iframe#videoFrame{width:100%;aspect-ratio:16/9;border:1px solid #ddd;border-radius:8px;margin-top:8px;background:#000}
-.status{font-size:11px;margin-top:8px;padding:6px 10px;border-radius:6px;background:#e3f2fd;color:#1565c0}
-.text-area{width:100%;min-height:180px;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:12px;font-family:monospace;white-space:pre-wrap;resize:vertical}
-.gen-btn{width:100%;padding:10px;margin-top:10px;background:#1565c0;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:bold}
-.gen-btn:hover{background:#0d47a1}
-.prog{background:#e8f5e9;padding:8px 12px;border-radius:6px;font-size:13px;margin-bottom:10px;color:#2e7d32}
-.card{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:12px;margin-bottom:10px;cursor:pointer;transition:all .2s}
-.card:hover{box-shadow:0 2px 8px rgba(0,0,0,.1)}
-.card.done{opacity:.5;background:#f5f5f5}
-.card.done .de{text-decoration:line-through;color:#888}
-.ts{font-size:11px;color:#666;cursor:pointer}
-.ts:hover{color:#1565c0;text-decoration:underline}
-.de{font-size:15px;margin:6px 0;color:#333;line-height:1.5}
-.zh{font-size:14px;color:#555;margin-top:4px;padding-top:6px;border-top:1px dashed #eee}
-.btns{display:flex;gap:8px;margin-top:8px}
-.btns button{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
-.b-done{background:#4caf50;color:#fff}
-.b-undo{background:#ff9800;color:#fff}
-.guide{font-size:12px;color:#555;margin-top:8px;padding:10px;background:#fff3e0;border-radius:6px;line-height:1.6}
-.guide b{color:#e65100}
-.guide ol{margin:8px 0 0 18px}
-.guide li{margin:4px 0}
-.trans-btn{padding:6px 12px;margin-top:8px;background:#7b1fa2;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px}
-</style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,sans-serif;background:#f0f4f8;color:#222}header{background:#1565c0;color:#fff;padding:14px 18px;position:sticky;top:0;z-index:100}header h1{font-size:18px}header p{font-size:12px;margin-top:4px;opacity:.85}.wrap{display:flex;flex-direction:row;height:calc(100vh - 60px)}@media(max-width:800px){.wrap{flex-direction:column;height:auto}}.left{width:40%;border-right:1px solid #ccc;overflow-y:auto;padding:12px;background:#fff}.right{width:60%;overflow-y:auto;padding:12px;background:#fafafa}@media(max-width:800px){.left,.right{width:100%}}h2{font-size:14px;margin-bottom:8px;color:#1565c0}.url-box{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}.url-box input{flex:1;min-width:200px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:13px}.url-box button{padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:12px;background:#1565c0;color:#fff}.url-note{font-size:11px;color:#888;margin-top:6px}iframe#videoFrame{width:100%;aspect-ratio:16/9;border:1px solid #ddd;border-radius:8px;margin-top:8px;background:#000}.status{font-size:11px;margin-top:8px;padding:6px 10px;border-radius:6px;background:#e3f2fd;color:#1565c0}.text-area{width:100%;min-height:180px;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:12px;font-family:monospace;white-space:pre-wrap;resize:vertical}.gen-btn{width:100%;padding:10px;margin-top:10px;background:#1565c0;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:bold}.gen-btn:hover{background:#0d47a1}.prog{background:#e8f5e9;padding:8px 12px;border-radius:6px;font-size:13px;margin-bottom:10px;color:#2e7d32}.card{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:12px;margin-bottom:10px;cursor:pointer;transition:all .2s}.card:hover{box-shadow:0 2px 8px rgba(0,0,0,.1)}.card.done{opacity:.5;background:#f5f5f5}.card.done .de{text-decoration:line-through;color:#888}.ts{font-size:11px;color:#666;cursor:pointer}.ts:hover{color:#1565c0;text-decoration:underline}.de{font-size:15px;margin:6px 0;color:#333;line-height:1.5}.zh{font-size:14px;color:#555;margin-top:4px;padding-top:6px;border-top:1px dashed #eee}.btns{display:flex;gap:8px;margin-top:8px}.btns button{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;font-size:12px}.b-done{background:#4caf50;color:#fff}.b-undo{background:#ff9800;color:#fff}.guide{font-size:12px;color:#555;margin-top:8px;padding:10px;background:#fff3e0;border-radius:6px;line-height:1.6}.guide b{color:#e65100}.guide ol{margin:8px 0 0 18px}.guide li{margin:4px 0}.trans-btn{padding:6px 12px;margin-top:8px;background:#7b1fa2;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px}.fetch-btn{padding:6px 12px;margin-top:8px;background:#00897b;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px}.fetch-btn:disabled{background:#bdbdbd;cursor:not-allowed}</style>
 </head>
 <body>
-<header>
-<h1>德文跟讀練習 - Shadowing Trainer</h1>
-<p>貼入 YouTube 德文影片連結，手動貼上德文字幕並翻譯成中文，逐句跟讀練習。</p>
-</header>
+<header><h1>德文跟讀練習 - Shadowing Trainer</h1><p>貼入 YouTube 德文影片連結，自動抓取德文字幕並翻譯成中文，逐句跟讀練習。</p></header>
 <div class="wrap">
 <div class="left">
 <h2>步驟 1：貼入 YouTube 連結</h2>
@@ -58,15 +17,15 @@ iframe#videoFrame{width:100%;aspect-ratio:16/9;border:1px solid #ddd;border-radi
 <button onclick="loadVideo()">載入影片</button>
 </div>
 <div class="url-note">支援格式：youtu.be/XXX 或 youtube.com/watch?v=XXX</div>
-<div class="status" id="status"></div>
-<h2 style="margin-top:16px">影片</h2>
-<iframe id="videoFrame" src="about:blank" title="YouTube video player"></iframe>
-<p class="url-note" style="margin-top:8px">點右側「跳到此刻」即可跳到影片對應時間點。</p>
+<h2>影片</h2>
+<iframe id="videoFrame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<div id="status" class="status">準備就緒。貼上連結並載入影片後，可點擊「自動抓取德文字幕」。</div>
 <div class="guide">
 <b>如何取得影片字幕：</b>
 <ol>
-<li>在 YouTube 影片頁面，開啟 <b>CC 字幕</b>（德文）</li>
-<li>點影片下方的 <b>「更多」→「顯示逐字稿」</b></li>
+<li>直接點下方「<b>自動抓取德文字幕</b>」按鈕（支援有 CC 字幕的影片）</li>
+<li>若自動抓取失敗，可在 YouTube 影片頁面開啟 <b>CC 字幕</b>（德文）</li>
+<li>點影片下方的「<b>更多</b>」→「<b>顯示逐字稿</b>」</li>
 <li>複製所有德文句子，一行一句貼到右側的文本框</li>
 <li>點「<b>翻譯成中文</b>」按鈕自動加上中文翻譯</li>
 </ol>
@@ -74,17 +33,16 @@ iframe#videoFrame{width:100%;aspect-ratio:16/9;border:1px solid #ddd;border-radi
 </div>
 <div class="right">
 <h2>步驟 2：貼入逐句文本</h2>
-<p style="font-size:12px;color:#666;margin-bottom:6px">格式：每一行一句<br>德文句子 ||| 中文翻譯<br>例如：Heute ist es warm. ||| 今天天氣溫暖。</p>
-<textarea id="textArea" class="text-area" placeholder="格式：每一行一句
-德文句子 ||| 中文翻譯
-例如：Heute ist es warm. ||| 今天天氣溫暖。
-
-（也可以只貼德文，點下方「翻譯成中文」按鈕）"></textarea>
+<p style="font-size:12px;margin-bottom:8px;color:#555">格式：每一行一句<br>德文句子 ||| 中文翻譯<br>例如：Heute ist es warm. ||| 今天天氣溫暖。<br>(也可以只貼德文，點下方「翻譯成中文」按鈕)</p>
+<textarea id="textArea" class="text-area" placeholder="在此貼上德文字幕..."></textarea>
+<button class="fetch-btn" onclick="fetchSubtitles()">📡 自動抓取德文字幕</button>
 <button class="trans-btn" onclick="translateGerman()">翻譯成中文（德文 → 中文）</button>
 <button class="gen-btn" onclick="parseText()">生成跟讀列表</button>
-<h2 style="margin-top:16px">逐句跟讀</h2>
-<div class="prog" id="prog">完成：0 / 0</div>
+<h2>逐句跟讀</h2>
+<div id="prog" class="prog">完成：0 / 0</div>
 <div id="list"></div>
 </div>
 </div>
-<script>var VID='',sentences=[],done=[];function setStatus(msg){document.getElementById('status').textContent=msg;}function getVideoId(url){var m=url.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/);return m?m[1]:null;}function loadVideo(){var input=document.getElementById('ytInput').value.trim();var id=getVideoId(input);if(!id){alert('請先貼入有效的 YouTube 連結。');return;}VID=id;document.getElementById('videoFrame').src='https://www.youtube.com/embed/'+id+'?enablejsapi=1';setStatus('影片已載入。');}function translateGerman(){var text=document.getElementById('textArea').value.trim();if(!text){alert('請先在文本框貼入德文。');return;}setStatus('正在翻譯成中文，請稍候...');var btn=document.querySelector('.trans-btn');btn.disabled=true;btn.textContent='翻譯中...';fetch('https://libretranslate.com/translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q:text,source:'de',target:'zh',format:'text'})}).then(function(r){return r.json();}).then(function(trans){var zh=(trans.translatedText||trans.result||'翻譯失敗').replace(/\n/g,' ');var zhWords=zh.split(/[,，.。！!?]/).filter(function(z){return z.trim().length>0;});var deLines=text.split('\n').filter(function(l){return l.trim().length>0;});var result=[];for(var i=0;i<deLines.length;i++){var zhPart=(zhWords[i]||zhWords[Math.floor(i/2)]||'（無翻譯）').trim();result.push(deLines[i]+' ||| '+zhPart);}document.getElementById('textArea').value=result.join('\n');setStatus('翻譯完成！請點「生成跟讀列表」。');}).catch(function(e){setStatus('翻譯失敗：'+e.message);alert('翻譯失敗：'+e.message);}).finally(function(){btn.disabled=false;btn.textContent='翻譯成中文（德文 → 中文）';});}function parseText(){var raw=document.getElementById('textArea').value.split('\n').map(function(l){return l.trim();}).filter(function(l){return l.length>0;});if(raw.length===0){alert('請先在文本框貼入內容。');return;}sentences=raw.map(function(line,i){var parts=line.split('|||');return {ts:Math.floor(i*5),de:parts[0].trim(),zh:parts[1]?parts[1].trim():''};});done=new Array(sentences.length).fill(false);render();}function fmt(sec){var m=Math.floor(sec/60),s=sec%60;return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;}function jump(sec){var frame=document.getElementById('videoFrame');frame.contentWindow.postMessage('{"event":"command","func":"seekTo","args":[('+sec+'),true]}','*');}function toggle(i){done[i]=!done[i];render();}function render(){var list=document.getElementById('list');list.innerHTML='';var dc=done.filter(Boolean).length;document.getElementById('prog').textContent='完成：'+dc+' / '+sentences.length;sentences.forEach(function(s,i){var card=document.createElement('div');card.className='card'+(done[i]?' done':'');var tsSpan=document.createElement('span');tsSpan.className='ts';tsSpan.textContent=fmt(s.ts)+' ▶ 跳到此刻';tsSpan.onclick=function(){jump(s.ts);};var deSpan=document.createElement('div');deSpan.className='de';deSpan.textContent=s.de;if(s.zh){var zhSpan=document.createElement('div');zhSpan.className='zh';zhSpan.textContent=s.zh;card.appendChild(zhSpan);}var btns=document.createElement('div');btns.className='btns';var btn=document.createElement('button');btn.className=done[i]?'b-undo':'b-done';btn.textContent=done[i]?'取消':'已跟讀 ✓';btn.onclick=function(e){e.stopPropagation();toggle(i);};btns.appendChild(btn);card.appendChild(tsSpan);card.appendChild(deSpan);card.appendChild(btns);list.appendChild(card);});}</script></body></html>
+<script>var VID='',sentences=[],done=[];function setStatus(msg){document.getElementById('status').textContent=msg;}function getVideoId(url){var m=url.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/);return m?m[1]:null;}function loadVideo(){var input=document.getElementById('ytInput').value.trim();var id=getVideoId(input);if(!id){alert('請先貼入有效的 YouTube 連結。');return;}VID=id;document.getElementById('videoFrame').src='https://www.youtube.com/embed/'+id+'?enablejsapi=1';setStatus('影片已載入。');}async function fetchSubtitles(){var input=document.getElementById('ytInput').value.trim();var id=getVideoId(input);if(!id){alert('請先貼入有效的 YouTube 連結並載入影片。');return;}var btn=document.querySelector('.fetch-btn');btn.disabled=true;btn.textContent='⏳ 抓取中...';setStatus('正在抓取德文字幕，請稍候...');try{var page=await fetch('https://www.youtube.com/watch?v='+id).then(function(r){return r.text();});var playerResp=page.split('ytInitialPlayerResponse = ')[1].split(';var')[0];var captions=JSON.parse(playerResp).captions;if(!captions||!captions.playerCaptionsTracklistRenderer||!captions.playerCaptionsTracklistRenderer.captionTracks){setStatus('❌ 此影片沒有可用的 CC 字幕。請手動貼上字幕。');alert('此影片沒有可用的 CC 字幕，請手動貼上字幕。');btn.disabled=false;btn.textContent='📡 自動抓取德文字幕';return;}var tracks=captions.playerCaptionsTracklistRenderer.captionTracks;var deTrack=null;var autoDeTrack=null;for(var i=0;i<tracks.length;i++){if(tracks[i].languageCode==='de'&&tracks[i].kind==='asr'){autoDeTrack=tracks[i];}if(tracks[i].languageCode==='de'&&tracks[i].kind!=='asr'){deTrack=tracks[i];}}var chosenTrack=deTrack||autoDeTrack||tracks[0];if(!chosenTrack){setStatus('❌ 找不到德文字幕軌。請手動貼上字幕。');alert('找不到德文字幕軌，請手動貼上字幕。');btn.disabled=false;btn.textContent='📡 自動抓取德文字幕';return;}setStatus('正在下載字幕內容...');var subData=await fetch(chosenTrack.baseUrl+'&fmt=json3').then(function(r){return r.json();});var events=subData.events||[];var lines=[];var lastEnd=0;for(var i=0;i<events.length;i++){var e=events[i];if(e.segs&&e.tStartMs!==undefined){var text=e.segs.map(function(s){return s.utf8||'';}).join('').replace(/\n/g,' ').replace(/♪|'|\.{2,}|<[\s\S]*?>|\[[\s\S]*?\]/g,'').trim();if(text){lines.push(text);lastEnd=e.tEndMs/1000;}}}if(lines.length===0){setStatus('❌ 字幕內容為空。請手動貼上字幕。');alert('字幕內容為空，請手動貼上字幕。');btn.disabled=false;btn.textContent='📡 自動抓取德文字幕';return;}var textarea=document.getElementById('textArea');textarea.value=lines.join('\n');setStatus('✅ 已抓取 '+lines.length+' 句德文字幕！請點「翻譯成中文」。');btn.disabled=false;btn.textContent='📡 自動抓取德文字幕';}catch(e){setStatus('❌ 抓取失敗：'+e.message);alert('抓取失敗：'+e.message+'\n請手動貼上字幕。');btn.disabled=false;btn.textContent='📡 自動抓取德文字幕';}}function translateGerman(){var text=document.getElementById('textArea').value.trim();if(!text){alert('請先在文本框貼入德文。');return;}setStatus('正在翻譯成中文，請稍候...');var btn=document.querySelector('.trans-btn');btn.disabled=true;btn.textContent='翻譯中...';fetch('https://libretranslate.com/translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q:text,source:'de',target:'zh',format:'text'})}).then(function(r){return r.json();}).then(function(trans){var zh=(trans.translatedText||trans.result||'翻譯失敗').replace(/\n/g,' ');var zhWords=zh.split(/[,，.。！!?]/).filter(function(z){return z.trim().length>0;});var deLines=text.split('\n').filter(function(l){return l.trim().length>0;});var result=[];for(var i=0;i<deLines.length;i++){var zhPart=(zhWords[i]||zhWords[Math.floor(i/2)]||'（無翻譯）').trim();result.push(deLines[i]+' ||| '+zhPart);}document.getElementById('textArea').value=result.join('\n');setStatus('翻譯完成！請點「生成跟讀列表」。');}).catch(function(e){setStatus('翻譯失敗：'+e.message);alert('翻譯失敗：'+e.message);}).finally(function(){btn.disabled=false;btn.textContent='翻譯成中文（德文 → 中文）';});}function parseText(){var raw=document.getElementById('textArea').value.split('\n').map(function(l){return l.trim();}).filter(function(l){return l.length>0;});if(raw.length===0){alert('請先在文本框貼入內容。');return;}sentences=raw.map(function(line,i){var parts=line.split('|||');return {ts:Math.floor(i*5),de:parts[0].trim(),zh:parts[1]?parts[1].trim():''};});done=new Array(sentences.length).fill(false);render();}function fmt(sec){var m=Math.floor(sec/60),s=sec%60;return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;}function jump(sec){var frame=document.getElementById('videoFrame');frame.contentWindow.postMessage('{"event":"command","func":"seekTo","args":[('+sec+'),true]}','*');}function toggle(i){done[i]=!done[i];render();}function render(){var list=document.getElementById('list');list.innerHTML='';var dc=done.filter(Boolean).length;document.getElementById('prog').textContent='完成：'+dc+' / '+sentences.length;sentences.forEach(function(s,i){var card=document.createElement('div');card.className='card'+(done[i]?' done':'');var tsSpan=document.createElement('span');tsSpan.className='ts';tsSpan.textContent=fmt(s.ts)+' ▶ 跳到此刻';tsSpan.onclick=function(){jump(s.ts);};var deSpan=document.createElement('div');deSpan.className='de';deSpan.textContent=s.de;if(s.zh){var zhSpan=document.createElement('div');zhSpan.className='zh';zhSpan.textContent=s.zh;card.appendChild(zhSpan);}var btns=document.createElement('div');btns.className='btns';var btn=document.createElement('button');btn.className=done[i]?'b-undo':'b-done';btn.textContent=done[i]?'取消':'已跟讀 ✓';btn.onclick=function(e){e.stopPropagation();toggle(i);};btns.appendChild(btn);card.appendChild(tsSpan);card.appendChild(deSpan);card.appendChild(btns);list.appendChild(card);});}</script>
+</body>
+</html>
