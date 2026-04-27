@@ -17,15 +17,10 @@ header p{font-size:12px;margin-top:4px;opacity:.85}
 @media(max-width:800px){.left,.right{width:100%}}
 h2{font-size:14px;margin-bottom:8px;color:#1565c0}
 .url-box{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.url-box input,.url-box textarea{flex:1;min-width:160px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:13px}
-.url-box .btn-group{display:flex;gap:6px;flex-wrap:wrap}
-.url-box button{padding:8px 14px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
-.url-box .btn-load{background:#1565c0;color:#fff}
-.url-box .btn-auto{background:#7b1fa2;color:#fff}
+.url-box input{flex:1;min-width:200px;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:13px}
+.url-box button{padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:12px;background:#1565c0;color:#fff}
 .url-note{font-size:11px;color:#888;margin-top:6px}
-.loading{font-size:11px;color:#6a1b9a;margin-top:6px;display:none}
 iframe#videoFrame{width:100%;aspect-ratio:16/9;border:1px solid #ddd;border-radius:8px;margin-top:8px;background:#000}
-iframe.hidden{display:none}
 .status{font-size:11px;margin-top:8px;padding:6px 10px;border-radius:6px;background:#e3f2fd;color:#1565c0}
 .text-area{width:100%;min-height:180px;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:12px;font-family:monospace;white-space:pre-wrap;resize:vertical}
 .gen-btn{width:100%;padding:10px;margin-top:10px;background:#1565c0;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:bold}
@@ -43,181 +38,53 @@ iframe.hidden{display:none}
 .btns button{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;font-size:12px}
 .b-done{background:#4caf50;color:#fff}
 .b-undo{background:#ff9800;color:#fff}
-.error{background:#ffebee;color:#c62828;padding:10px;border-radius:6px;margin-top:10px;font-size:13px}
-.note{font-size:12px;color:#666;margin-top:8px;padding:8px;background:#fff3e0;border-radius:6px}
+.guide{font-size:12px;color:#555;margin-top:8px;padding:10px;background:#fff3e0;border-radius:6px;line-height:1.6}
+.guide b{color:#e65100}
+.guide ol{margin:8px 0 0 18px}
+.guide li{margin:4px 0}
+.trans-btn{padding:6px 12px;margin-top:8px;background:#7b1fa2;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px}
 </style>
 </head>
 <body>
 <header>
 <h1>德文跟讀練習 - Shadowing Trainer</h1>
-<p>貼入任何 YouTube 德文影片連結，自動抓取字幕+翻譯成中文，逐句跟讀練習。</p>
+<p>貼入 YouTube 德文影片連結，手動貼上德文字幕並翻譯成中文，逐句跟讀練習。</p>
 </header>
 <div class="wrap">
 <div class="left">
 <h2>步驟 1：貼入 YouTube 連結</h2>
 <div class="url-box">
 <input id="ytInput" type="text" placeholder="https://youtu.be/... 或 https://youtube.com/watch?v=...">
-<div class="btn-group">
-<button class="btn-load" onclick="loadVideo()">載入影片</button>
-<button class="btn-auto" onclick="autoFetch()">自動抓取字幕</button>
+<button onclick="loadVideo()">載入影片</button>
 </div>
-</div>
-<div class="url-note">支援格式：youtu.be/XXX 或 youtube.com/watch?v=XXX<br>小提示：若影片無德文字幕，可手動貼入「德文 ||| 中文」格式。</div>
-<div class="loading" id="loading"></div>
+<div class="url-note">支援格式：youtu.be/XXX 或 youtube.com/watch?v=XXX</div>
 <div class="status" id="status"></div>
 <h2 style="margin-top:16px">影片</h2>
 <iframe id="videoFrame" src="about:blank" title="YouTube video player"></iframe>
-<p class="note">點右側「跳到此刻」即可跳到影片對應時間點。</p>
+<p class="url-note" style="margin-top:8px">點右側「跳到此刻」即可跳到影片對應時間點。</p>
+<div class="guide">
+<b>如何取得影片字幕：</b>
+<ol>
+<li>在 YouTube 影片頁面，開啟 <b>CC 字幕</b>（德文）</li>
+<li>點影片下方的 <b>「更多」→「顯示逐字稿」</b></li>
+<li>複製所有德文句子，一行一句貼到右側的文本框</li>
+<li>點「<b>翻譯成中文</b>」按鈕自動加上中文翻譯</li>
+</ol>
+</div>
 </div>
 <div class="right">
 <h2>步驟 2：貼入逐句文本</h2>
 <p style="font-size:12px;color:#666;margin-bottom:6px">格式：每一行一句<br>德文句子 ||| 中文翻譯<br>例如：Heute ist es warm. ||| 今天天氣溫暖。</p>
 <textarea id="textArea" class="text-area" placeholder="格式：每一行一句
 德文句子 ||| 中文翻譯
-例如：Heute ist es warm. ||| 今天天氣溫暖。"></textarea>
+例如：Heute ist es warm. ||| 今天天氣溫暖。
+
+（也可以只貼德文，點下方「翻譯成中文」按鈕）"></textarea>
+<button class="trans-btn" onclick="translateGerman()">翻譯成中文（德文 → 中文）</button>
 <button class="gen-btn" onclick="parseText()">生成跟讀列表</button>
 <h2 style="margin-top:16px">逐句跟讀</h2>
 <div class="prog" id="prog">完成：0 / 0</div>
 <div id="list"></div>
 </div>
 </div>
-
-<script>
-var VID='',sentences=[],done=[];
-function setStatus(msg,loading){document.getElementById('status').textContent=msg;document.getElementById('loading').style.display=loading?'block':'none';}
-function getVideoId(url){
-  var m=url.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/);
-  return m?m[1]:null;
-}
-function loadVideo(){
-  var input=document.getElementById('ytInput').value.trim();
-  var id=getVideoId(input);
-  if(!id){alert('請先貼入有效的 YouTube 連結。');return;}
-  VID=id;
-  document.getElementById('videoFrame').src='https://www.youtube.com/embed/'+id+'?enablejsapi=1';
-  setStatus('影片已載入。',false);
-}
-function autoFetch(){
-  var input=document.getElementById('ytInput').value.trim();
-  var id=getVideoId(input);
-  if(!id){alert('請先貼入 YouTube 連結。');return;}
-  VID=id;
-  setStatus('正在抓取德文逐字稿...',true);
-  var timedTextUrl='https://www.youtube.com/api/timedtext?lang=de&v='+id+'&fmt=json3';
-  fetch(timedTextUrl,{mode:'no-cors'}).then(function(r){
-    return r.text();
-  }).then(function(text){
-    if(!text||text.length<50){throw new Error('找不到德文字幕，該影片可能沒有德文 CC。');}
-    try{
-      var data=JSON.parse(text);
-    }catch(e){
-      var parser=new DOMParser();
-      var xml=parser.parseFromString(text,'text/xml');
-      var nodes=xml.getElementsByTagName('text');
-      var deLines=[];
-      for(var i=0;i<nodes.length;i++){deLines.push(nodes[i].textContent.trim());}
-      if(deLines.length===0){throw new Error('無法解析字幕內容。');}
-      setStatus('德文已抓取！正在翻譯成中文...',true);
-      var allText=deLines.join(' ');
-      return fetch('https://libretranslate.com/translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q:allText,source:'de',target:'zh',format:'text'})})
-      .then(function(r2){return r2.json();})
-      .then(function(trans){
-        var zhText=(trans.translatedText||trans.result||'').replace(/\n/g,' ');
-        var zhWords=zhText.split(/[,，.。！!?]/).filter(function(z){return z.trim().length>0;});
-        var result=[];
-        for(var i=0;i<deLines.length;i++){
-          var zh=(zhWords[i]||zhWords[Math.floor(i/2)]||'（無翻譯）').trim();
-          result.push(deLines[i]+' ||| '+zh);
-        }
-        document.getElementById('textArea').value=result.join('\n');
-        setStatus('完成！請點「生成跟讀列表」。',false);
-      });
-    }
-    var events=data.events||[];
-    var deLines=[];
-    for(var j=0;j<events.length;j++){
-      var segs=events[j].segs||[];
-      var line='';
-      for(var k=0;k<segs.length;k++){line+=segs[k].utf8||'';}
-      line=line.trim();
-      if(line.length>0){deLines.push(line);}
-    }
-    if(deLines.length===0){throw new Error('找不到德文字幕，該影片可能沒有德文 CC。');}
-    setStatus('德文已抓取！正在翻譯成中文...',true);
-    var allText=deLines.join(' ');
-    return fetch('https://libretranslate.com/translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q:allText,source:'de',target:'zh',format:'text'})})
-    .then(function(r2){return r2.json();})
-    .then(function(trans){
-      var zhText=(trans.translatedText||trans.result||'').replace(/\n/g,' ');
-      var zhWords=zhText.split(/[,，.。！!?]/).filter(function(z){return z.trim().length>0;});
-      var result=[];
-      for(var i=0;i<deLines.length;i++){
-        var zh=(zhWords[i]||zhWords[Math.floor(i/2)]||'（無翻譯）').trim();
-        result.push(deLines[i]+' ||| '+zh);
-      }
-      document.getElementById('textArea').value=result.join('\n');
-      setStatus('完成！請點「生成跟讀列表」。',false);
-    });
-  }).catch(function(e){
-    setStatus('抓取失敗：'+e.message,false);
-    alert('自動抓取失敗：'+e.message+'\n可能原因：影片沒有德文字幕，或 YouTube 限制抓取。\n建議手動貼入「德文 ||| 中文」格式。');
-  });
-}
-function parseText(){
-  var raw=document.getElementById('textArea').value.split('\n').map(function(l){return l.trim();}).filter(function(l){return l.length>0;});
-  sentences=raw.map(function(line,i){
-    var parts=line.split('|||');
-    return {ts:Math.floor(i*5),de:parts[0].trim(),zh:parts[1]?parts[1].trim():''};
-  });
-  done=new Array(sentences.length).fill(false);
-  render();
-}
-function fmt(sec){
-  var m=Math.floor(sec/60),s=sec%60;
-  return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-}
-function jump(sec){
-  var frame=document.getElementById('videoFrame');
-  frame.contentWindow.postMessage('{"event":"command","func":"seekTo","args":[('+sec+'),true]}','*');
-}
-function toggle(i){
-  done[i]=!done[i];
-  render();
-}
-function render(){
-  var list=document.getElementById('list');
-  list.innerHTML='';
-  var dc=done.filter(Boolean).length;
-  document.getElementById('prog').textContent='完成：'+dc+' / '+sentences.length;
-  sentences.forEach(function(s,i){
-    var card=document.createElement('div');
-    card.className='card'+(done[i]?' done':'');
-    var tsSpan=document.createElement('span');
-    tsSpan.className='ts';
-    tsSpan.textContent=fmt(s.ts)+' ▶ 跳到此刻';
-    tsSpan.onclick=function(){jump(s.ts);};
-    var deSpan=document.createElement('div');
-    deSpan.className='de';
-    deSpan.textContent=s.de;
-    if(s.zh){
-      var zhSpan=document.createElement('div');
-      zhSpan.className='zh';
-      zhSpan.textContent=s.zh;
-      card.appendChild(zhSpan);
-    }
-    var btns=document.createElement('div');
-    btns.className='btns';
-    var btn=document.createElement('button');
-    btn.className=done[i]?'b-undo':'b-done';
-    btn.textContent=done[i]?'取消':'已跟讀 ✓';
-    btn.onclick=function(e){e.stopPropagation();toggle(i);};
-    btns.appendChild(btn);
-    card.appendChild(tsSpan);
-    card.appendChild(deSpan);
-    card.appendChild(btns);
-    list.appendChild(card);
-  });
-}
-</script>
-</body>
-</html>
+<script>var VID='',sentences=[],done=[];function setStatus(msg){document.getElementById('status').textContent=msg;}function getVideoId(url){var m=url.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/);return m?m[1]:null;}function loadVideo(){var input=document.getElementById('ytInput').value.trim();var id=getVideoId(input);if(!id){alert('請先貼入有效的 YouTube 連結。');return;}VID=id;document.getElementById('videoFrame').src='https://www.youtube.com/embed/'+id+'?enablejsapi=1';setStatus('影片已載入。');}function translateGerman(){var text=document.getElementById('textArea').value.trim();if(!text){alert('請先在文本框貼入德文。');return;}setStatus('正在翻譯成中文，請稍候...');var btn=document.querySelector('.trans-btn');btn.disabled=true;btn.textContent='翻譯中...';fetch('https://libretranslate.com/translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q:text,source:'de',target:'zh',format:'text'})}).then(function(r){return r.json();}).then(function(trans){var zh=(trans.translatedText||trans.result||'翻譯失敗').replace(/\n/g,' ');var zhWords=zh.split(/[,，.。！!?]/).filter(function(z){return z.trim().length>0;});var deLines=text.split('\n').filter(function(l){return l.trim().length>0;});var result=[];for(var i=0;i<deLines.length;i++){var zhPart=(zhWords[i]||zhWords[Math.floor(i/2)]||'（無翻譯）').trim();result.push(deLines[i]+' ||| '+zhPart);}document.getElementById('textArea').value=result.join('\n');setStatus('翻譯完成！請點「生成跟讀列表」。');}).catch(function(e){setStatus('翻譯失敗：'+e.message);alert('翻譯失敗：'+e.message);}).finally(function(){btn.disabled=false;btn.textContent='翻譯成中文（德文 → 中文）';});}function parseText(){var raw=document.getElementById('textArea').value.split('\n').map(function(l){return l.trim();}).filter(function(l){return l.length>0;});if(raw.length===0){alert('請先在文本框貼入內容。');return;}sentences=raw.map(function(line,i){var parts=line.split('|||');return {ts:Math.floor(i*5),de:parts[0].trim(),zh:parts[1]?parts[1].trim():''};});done=new Array(sentences.length).fill(false);render();}function fmt(sec){var m=Math.floor(sec/60),s=sec%60;return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;}function jump(sec){var frame=document.getElementById('videoFrame');frame.contentWindow.postMessage('{"event":"command","func":"seekTo","args":[('+sec+'),true]}','*');}function toggle(i){done[i]=!done[i];render();}function render(){var list=document.getElementById('list');list.innerHTML='';var dc=done.filter(Boolean).length;document.getElementById('prog').textContent='完成：'+dc+' / '+sentences.length;sentences.forEach(function(s,i){var card=document.createElement('div');card.className='card'+(done[i]?' done':'');var tsSpan=document.createElement('span');tsSpan.className='ts';tsSpan.textContent=fmt(s.ts)+' ▶ 跳到此刻';tsSpan.onclick=function(){jump(s.ts);};var deSpan=document.createElement('div');deSpan.className='de';deSpan.textContent=s.de;if(s.zh){var zhSpan=document.createElement('div');zhSpan.className='zh';zhSpan.textContent=s.zh;card.appendChild(zhSpan);}var btns=document.createElement('div');btns.className='btns';var btn=document.createElement('button');btn.className=done[i]?'b-undo':'b-done';btn.textContent=done[i]?'取消':'已跟讀 ✓';btn.onclick=function(e){e.stopPropagation();toggle(i);};btns.appendChild(btn);card.appendChild(tsSpan);card.appendChild(deSpan);card.appendChild(btns);list.appendChild(card);});}</script></body></html>
